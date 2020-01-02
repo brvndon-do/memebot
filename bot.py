@@ -27,11 +27,17 @@ async def on_message(message:discord.Message):
     
     if message.content.startswith('!paramtest'):
         print(f'{message.author} has activated paramtest')
-        params = message.content.split(' ')
+        params: list = message.content.split(' ')
 
-        if params[1] == 'baka':
+        print(params)
+
+        if len(params) > 2:
+            await message.channel.send(f'You inserted too many parameters - {message.author.mention}')
+        elif params[1] == 'baka':
             await message.channel.send(f'ur a fookin baka {message.author.mention}')
         elif params[1] == 'tits':
             await message.channel.send(f'( . Y . ) {message.author.mention}')
+        else:
+            await message.channel.send(f'Parameter not recognized - {message.author.mention}')
 
 client.run(token)
