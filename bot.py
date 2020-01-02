@@ -4,34 +4,34 @@
 
 import os
 import discord
+from discord.ext import commands
 from dotenv import load_dotenv
 
 # load environment variables
 load_dotenv()
-token = os.getenv('TOKEN')
+token = os.getenv('DISCORD_TOKEN')
 
-client = discord.Client()
+bot = commands.Bot(command_prefix='!')
 
-@client.event
+@bot.event
 async def on_ready():
-    print(f'Logged in to Discord as {client.user}')
+    print(f'Logged in to Discord as {bot.user.name}')
 
-@client.event
-async def on_message(message:discord.Message):
-    if message.author == client.user:
-        return
+@bot.command(name='diss', help='Disrespects the user.')
+async def diss(ctx, *args): 
+    if len(args) == 1:
+        await ctx.send('you suck x' + args[0] + f' {ctx.author.mention}')
+    else:   
+        await ctx.send(f'you suck {ctx.author.mention}')
     
-    if message.content.startswith('!test'):
-        print(f'{message.author} has activated test')
-        await message.channel.send(f'ur a bitch {message.author.mention}')
-    
-    if message.content.startswith('!paramtest'):
-        print(f'{message.author} has activated paramtest')
-        params = message.content.split(' ')
+@bot.command(name='paramtest')
+async def paramtest(ctx, *args):
+    print(f'{ctx.message.author} has activated paramtest')
 
-        if params[1] == 'baka':
-            await message.channel.send(f'ur a fookin baka {message.author.mention}')
-        elif params[1] == 'tits':
-            await message.channel.send(f'( . Y . ) {message.author.mention}')
+    if len(args) > 0:
+        if args[0] == 'baka':
+            await ctx.message.channel.send(f'ur a baka {ctx.author.mention}')    
+        elif args[0] == 'tits':
+            await ctx.message.channel.send(f'( . Y . ) {ctx.author.mention}')
 
-client.run(token)
+bot.run(token)
