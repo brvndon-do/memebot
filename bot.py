@@ -4,34 +4,56 @@
 
 import os
 import discord
+
+from discord.ext import commands
 from dotenv import load_dotenv
+
+from search import SearchReddit
 
 # load environment variables
 load_dotenv()
-token = os.getenv('TOKEN')
+token = os.getenv('DISCORD_TOKEN')
 
-client = discord.Client()
+bot = commands.Bot(command_prefix='!')
 
-@client.event
+@bot.event
 async def on_ready():
-    print(f'Logged in to Discord as {client.user}')
+    print(f'Logged in to Discord as {bot.user.name}')
 
-@client.event
-async def on_message(message:discord.Message):
-    if message.author == client.user:
-        return
+@bot.command(name='diss', help='Disrespects the user.')
+async def diss(ctx, *args): 
+    if len(args) == 1:
+        await ctx.send('you suck x' + args[0] + f' {ctx.author.mention}')
+    else:   
+        await ctx.send(f'you suck {ctx.author.mention}')
+
+@bot.command(name='meme', help='Selects random meme image.')
+async def meme(ctx, *args):
+    print(f'***{ctx.message.author} has activated command: meme***')
+    reddit = SearchReddit()
+
+    if (len(args) > 0):
+        reddit_data = reddit.get_meme(args[0])
+    else:
+        reddit_data = reddit.get_meme()
     
-    if message.content.startswith('!test'):
-        print(f'{message.author} has activated test')
-        await message.channel.send(f'ur a bitch {message.author.mention}')
-    
-    if message.content.startswith('!paramtest'):
-        print(f'{message.author} has activated paramtest')
-        params = message.content.split(' ')
+    author = reddit_data['author']
+    title = reddit_data['title']
+    subreddit = reddit_data['subreddit']
+    img = reddit_data['img']
 
-        if params[1] == 'baka':
-            await message.channel.send(f'ur a fookin baka {message.author.mention}')
-        elif params[1] == 'tits':
-            await message.channel.send(f'( . Y . ) {message.author.mention}')
+    await ctx.message.channel.send(f'user: **{author}**\ntitle: **{title}**\nsubreddit: **{subreddit}**\n{img}')
 
-client.run(token)
+@bot.command(name='joke', help='Tells a joke.')
+async def joke(ctx, *args):
+    print(f'***{ctx.message.author} has activated command: joke***')
+    reddit = SearchReddit()
+    reddit_data = reddit.get_joke()
+
+    author = reddit_data['author']
+    title = reddit_data['title']
+    text = reddit_data['text']
+
+    await ctx.message.channel.send(f'user: **{author}**\n**{title}**\n{text}\n')
+
+bot.run(token)

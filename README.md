@@ -4,14 +4,22 @@ Required Packages:
 <ul>
     <li>discord.py</li>
     <li>python-dotenv</li>
+    <li>praw</li>
+    <li>requests</li>
 </ul>
-List of Subreddits:
+Commands:
 <ul>
+    <li>!meme (args..) - displays a meme from a subreddit. leave empty for random meme</li>
+    <li>!joke - tells a joke</li>
+</ul>
+Subreddits:
+<ul>
+    <li>Jokes</li>
     <li>me_irl</li>
     <li>comedyheaven</li>
-    <li>bonehurtingjuice</li>
     <li>memes</li>
     <li>dankmemes</li>
+    <li>bonehurtingjuice</li>
     <li>meirl</li>
-</ul>
+    <li>anime_irl</li>
     
