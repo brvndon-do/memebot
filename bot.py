@@ -4,11 +4,14 @@
 
 import os
 import discord
+
+from search import SearchReddit
+from commands import Commands
 from dotenv import load_dotenv
 
 # load environment variables
 load_dotenv()
-token = os.getenv('TOKEN')
+token = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client()
 
@@ -22,9 +25,14 @@ async def on_message(message:discord.Message):
         return
     
     if message.content.startswith('!test'):
-        print(f'{message.author} has activated test')
+        print(f'{message.author} has activated {Commands.Joke.name}')
         await message.channel.send(f'ur a bitch {message.author.mention}')
     
+    if message.content.startswith('!memetest'):
+        print(f'{message.author} has activated {Commands.Meme.name}')
+        meme = SearchReddit()
+        await message.channel.send(meme.get_data())
+
     if message.content.startswith('!paramtest'):
         print(f'{message.author} has activated paramtest')
         params: list = message.content.split(' ')
