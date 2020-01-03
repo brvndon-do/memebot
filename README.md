@@ -12,4 +12,14 @@ Commands:
     <li>!meme (args..) - displays a meme from a subreddit. leave empty for random meme</li>
     <li>!joke - tells a joke</li>
 </ul>
+Subreddits:
+<ul>
+    <li>Jokes</li>
+    <li>me_irl</li>
+    <li>comedyheaven</li>
+    <li>memes</li>
+    <li>dankmemes</li>
+    <li>bonehurtingjuice</li>
+    <li>meirl</li>
+    <li>anime_irl</li>
     
