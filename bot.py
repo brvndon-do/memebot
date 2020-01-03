@@ -5,47 +5,46 @@
 import os
 import discord
 
-from search import SearchReddit
-from commands import Commands
+from discord.ext import commands
 from dotenv import load_dotenv
+
+from search import SearchReddit
 
 # load environment variables
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
-client = discord.Client()
+bot = commands.Bot(command_prefix='!')
 
-@client.event
+@bot.event
 async def on_ready():
-    print(f'Logged in to Discord as {client.user}')
+    print(f'Logged in to Discord as {bot.user.name}')
 
-@client.event
-async def on_message(message:discord.Message):
-    if message.author == client.user:
-        return
-    
-    if message.content.startswith('!test'):
-        print(f'{message.author} has activated {Commands.Joke.name}')
-        await message.channel.send(f'ur a bitch {message.author.mention}')
-    
-    if message.content.startswith('!memetest'):
-        print(f'{message.author} has activated {Commands.Meme.name}')
-        meme = SearchReddit()
-        await message.channel.send(meme.get_data())
+@bot.command(name='diss', help='Disrespects the user.')
+async def diss(ctx, *args): 
+    if len(args) == 1:
+        await ctx.send('you suck x' + args[0] + f' {ctx.author.mention}')
+    else:   
+        await ctx.send(f'you suck {ctx.author.mention}')
 
-    if message.content.startswith('!paramtest'):
-        print(f'{message.author} has activated paramtest')
-        params: list = message.content.split(' ')
+@bot.command(name='memetest', help='Pulls a random/specific meme from a subreddit')
+async def memetest(ctx, *args):
+    print(f'***{ctx.message.author} has activated memetest***')
+    reddit = SearchReddit()
 
-        print(params)
+    if (len(args) > 0):
+        author = reddit.get_data(args[0])['author']
+        title = reddit.get_data(args[0])['title']
+        subreddit = reddit.get_data(args[0])['subreddit']
+        img = reddit.get_data(args[0])['img']
+        #await ctx.message.channel.send(f'user: **{author}**\ntitle: **{title}**\nsubreddit: **{subreddit}**\n{img}')
+    else:
+        author = reddit.get_data()['author']
+        title = reddit.get_data()['title']
+        subreddit = reddit.get_data()['subreddit']
+        img = reddit.get_data()['img']
 
-        if len(params) > 2:
-            await message.channel.send(f'You inserted too many parameters - {message.author.mention}')
-        elif params[1] == 'baka':
-            await message.channel.send(f'ur a fookin baka {message.author.mention}')
-        elif params[1] == 'tits':
-            await message.channel.send(f'( . Y . ) {message.author.mention}')
-        else:
-            await message.channel.send(f'Parameter not recognized - {message.author.mention}')
+    await ctx.message.channel.send(img)
 
-client.run(token)
+
+bot.run(token)
