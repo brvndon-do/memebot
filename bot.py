@@ -27,24 +27,33 @@ async def diss(ctx, *args):
     else:   
         await ctx.send(f'you suck {ctx.author.mention}')
 
-@bot.command(name='memetest', help='Pulls a random/specific meme from a subreddit')
-async def memetest(ctx, *args):
-    print(f'***{ctx.message.author} has activated memetest***')
+@bot.command(name='meme', help='Selects random meme image.')
+async def meme(ctx, *args):
+    print(f'***{ctx.message.author} has activated command: meme***')
     reddit = SearchReddit()
 
     if (len(args) > 0):
-        author = reddit.get_data(args[0])['author']
-        title = reddit.get_data(args[0])['title']
-        subreddit = reddit.get_data(args[0])['subreddit']
-        img = reddit.get_data(args[0])['img']
-        #await ctx.message.channel.send(f'user: **{author}**\ntitle: **{title}**\nsubreddit: **{subreddit}**\n{img}')
+        reddit_data = reddit.get_meme(args[0])
     else:
-        author = reddit.get_data()['author']
-        title = reddit.get_data()['title']
-        subreddit = reddit.get_data()['subreddit']
-        img = reddit.get_data()['img']
+        reddit_data = reddit.get_meme()
+    
+    author = reddit_data['author']
+    title = reddit_data['title']
+    subreddit = reddit_data['subreddit']
+    img = reddit_data['img']
 
-    await ctx.message.channel.send(img)
+    await ctx.message.channel.send(f'user: **{author}**\ntitle: **{title}**\nsubreddit: **{subreddit}**\n{img}')
 
+@bot.command(name='joke', help='Tells a joke.')
+async def joke(ctx, *args):
+    print(f'***{ctx.message.author} has activated command: joke***')
+    reddit = SearchReddit()
+    reddit_data = reddit.get_joke()
+
+    author = reddit_data['author']
+    title = reddit_data['title']
+    text = reddit_data['text']
+
+    await ctx.message.channel.send(f'user: **{author}**\n**{title}**\n{text}\n')
 
 bot.run(token)
