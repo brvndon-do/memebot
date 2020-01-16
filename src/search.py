@@ -37,7 +37,6 @@ class RedditSearcher:
             return False
         return True
 
-    # todo: refactor
     def get_meme(self, sub_name=''):
         selected_sub = sub_name
 
@@ -58,7 +57,6 @@ class RedditSearcher:
             'img': rand_submission.url
         }
     
-    # todo: refactor
     def get_joke(self):
         reddit_submissions = self.get_submissions(sub_name='Jokes', picture_mode=False)
         rand_submission = random.choice(reddit_submissions)
